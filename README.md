@@ -16,19 +16,31 @@ What's still missing
 Technically, this should work on BNB mainnet right now. But here's how to test locally:
 
 1. install packages
-```npm i```
+```
+npm i
+```
+
 
 2. install ganache-cli globally, if you haven't already:
-```npm i -g ganche-cli```
+```
+npm i -g ganche-cli
+```
 
 3. Import a privateKey into your metamask for testing purposes. Never put crypto into it.
 
 4. run ganache:
-``` ganache-cli --account="0x${privatekey}, 1000000000000000000000" -f {rpc node for binance}```
+```
+ganache-cli --account="0x${privatekey}, 1000000000000000000000" -f {rpc node for binance}
+```
 
 By specifying the privatekey, you won't need to import any keys into metamask again while testing. Note that you need to preceed it with "0x"
 
 5. run the app
-```yarn start```
+```
+yarn start
+```
 or
-```npm run start```
+```
+npm run start
+```
+6. Connect metamask using the privatekey imported
