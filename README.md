@@ -26,7 +26,7 @@ npm i
 npm i -g ganche-cli
 ```
 
-3. Import a privateKey into your metamask for testing purposes. Never put crypto into it.
+3. Import a privateKey into your metamask for testing purposes. Never put real crypto into it.
 
 4. run ganache:
 ```
