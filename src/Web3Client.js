@@ -7,7 +7,7 @@ import {
 } from './bsc_lib';
 
 
-let selectedAccount;
+let selectedAccount = '';
 let erc20_USDT;
 let isInitialized = false;
 let web3;
@@ -34,7 +34,6 @@ export const init = () => {
                 return
             })
 
-
         window.ethereum.on('accountsChanged', accounts => {
             selectedAccount = accounts[0];
             console.log(`Accoung changed to:  ${selectedAccount}`)
@@ -50,6 +49,8 @@ export const init = () => {
 
 
     isInitialized = true;
+
+    return isInitialized
 }
 
 
@@ -139,6 +140,18 @@ export const get_crUSDT_Balance = async () => {
 
 }
 
+export const get_balances = async () => {
+    try {
+        const BNB_Balance = await web3.eth.getBalance(selectedAccount);
+        const USDT_Balance = await USDT.methods.balanceOf(selectedAccount).call()
+        const crUSDT_Balance = await crUSDT.methods.balanceOf(selectedAccount).call()
+
+        return { BNB_Balance, USDT_Balance, crUSDT_Balance };
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 export const withdrawUSDT = async () => {
     try {
@@ -151,3 +164,4 @@ export const withdrawUSDT = async () => {
         console.log(err)
     }
 }
+

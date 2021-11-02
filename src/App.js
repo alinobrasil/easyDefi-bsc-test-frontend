@@ -3,8 +3,9 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import {
   init, getOwnBalance, getUSDTBalance,
-  swapUSDT, approveUSDT, depositUSDT, get_crUSDT_Balance, withdrawUSDT
+  swapUSDT, approveUSDT, depositUSDT, get_crUSDT_Balance, withdrawUSDT, get_balances
 } from './Web3Client'
+import { isCompositeComponentWithType } from 'react-dom/test-utils';
 
 
 function App() {
@@ -17,41 +18,97 @@ function App() {
   const [USDTbalance, setUSDTbalance] = useState(0);
   const [crUSDTbalance, setcrUSDTbalance] = useState(0);
 
-
+  //runs only the first time component is rendered
   useEffect(() => {
-    // const web3 = new Web3(providerUrl);
-    init();
+    init()
+    // refreshBalances()
+    console.log('a')
+
+
   }, [])
 
-  const fetchUSDTBalance = () => {
-    getUSDTBalance().then(USDTbalance => {
-      setUSDTbalance(USDTbalance);
-      console.log("USDT balance: ", (USDTbalance / 1e18).toFixed(2));
-    }).catch(err => {
-      console.log(err)
-    })
-  }
 
-  const fetchbalance = () => {
-    getOwnBalance().then(balance => {
-      setBalance(balance);
-      console.log("BNB balance: ", (balance / 1e18).toFixed(2));
 
-    }).catch(e => {
+
+
+  // const fetchUSDTBalance = () => {
+  //   getUSDTBalance().then(USDTbalance => {
+  //     setUSDTbalance(USDTbalance);
+  //     console.log("USDT balance: ", (USDTbalance / 1e18).toFixed(2));
+  //   }).catch(err => {
+  //     console.log(err)
+  //   })
+  // }
+
+  // const fetchbalance = () => {
+  //   getOwnBalance().then(balance => {
+  //     setBalance(balance);
+  //     console.log("BNB balance: ", (balance / 1e18).toFixed(2));
+
+  //   }).catch(e => {
+  //     console.log(e)
+  //   })
+  // }
+
+  const refreshBalances = () => {
+    // fetchbalance();
+    // fetchUSDTBalance();
+
+    // get_crUSDT_Balance().then(crUSDTbalance => {
+    //   setcrUSDTbalance(crUSDTbalance);
+    //   console.log("crUSDT balance: ", (crUSDTbalance / 1e8).toFixed(2))
+    // })
+    try {
+      console.log('getting balances...')
+      get_balances().then(balances => {
+        setBalance(balances.BNB_Balance)
+        setUSDTbalance(balances.USDT_Balance)
+        setcrUSDTbalance(balances.crUSDT_Balance)
+      })
+    } catch (e) {
       console.log(e)
-    })
+    }
   }
 
-  function refreshBalances() {
-    fetchbalance();
-    fetchUSDTBalance();
-
-    get_crUSDT_Balance().then(crUSDTbalance => {
-      setcrUSDTbalance(crUSDTbalance);
-      console.log("crUSDT balance: ", (crUSDTbalance / 1e8).toFixed(2))
-    })
+  const onButtonSwap = () => {
+    try {
+      swapUSDT().then(() => {
+        refreshBalances()
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
+  const onButtonApprove = () => {
+    try {
+      approveUSDT().then(() => {
+        refreshBalances()
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const onButtonDeposit = () => {
+    try {
+      depositUSDT().then(() => {
+        refreshBalances()
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const onButtonWithdraw = () => {
+    try {
+      withdrawUSDT().then(() => {
+        refreshBalances()
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <div className="App">
@@ -82,16 +139,16 @@ function App() {
 
       <br /><br />
 
-      <button className="button" onClick={swapUSDT}>Sell 1 BNB to get some USDT</button>
+      <button className="button" onClick={onButtonSwap}>Sell 1 BNB to get some USDT</button>
 
       <br /><br />
-      <button className="button" onClick={approveUSDT}>Approve USDT to be used on Cream Finance</button>
+      <button className="button" onClick={onButtonApprove}>Approve USDT to be used on Cream Finance</button>
 
       <br /><br />
-      <button className="button" onClick={depositUSDT}>Deposit USDT into Cream Finance</button>
+      <button className="button" onClick={onButtonDeposit}>Deposit USDT into Cream Finance</button>
 
       <br /><br />
-      <button className="button" onClick={withdrawUSDT}>Withdraw all USDT back into wallet</button>
+      <button className="button" onClick={onButtonWithdraw}>Withdraw all USDT back into wallet</button>
     </div>
   );
 }
